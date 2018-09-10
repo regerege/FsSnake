@@ -55,14 +55,14 @@ module internal SnakeConfig =
     /// Add a point at regular intervals
     let PointsScored = 10               //一定時間毎のポイント
     /// Add a Special Food at regular intervals
-    let SpecialFoodTiming = 3000L       //スペシャル餌の追加頻度
+    let SpecialFoodTiming = 60000L       //スペシャル餌の追加頻度
     /// Add a Brown at regular intervals
-    let BrownTiming = 2000L             //茶色い物体の追加頻度
+    let BrownTiming = 3000L             //茶色い物体の追加頻度
     /// Score when I ate a meal
     let EatPoint = 100                  //餌を食べたポイント
     /// Score when I ate a special meal
     let SpecialEatPoint = 500           //スペシャル餌を食べたポイント
     /// Degree to grow and eat a meal
-    let StretchBody = 5                 //えさを食べると伸びる胴体長
+    let StretchBody = 1                 //えさを食べると伸びる胴体長
     let InitalNuberOfFood = 10          //初期餌数
     let InitalNuberOfSpecialFood = 1    //スペシャル餌の初期数

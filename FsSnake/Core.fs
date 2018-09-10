@@ -76,13 +76,15 @@ module SnakeGame =
             InputTask = task
             Afterimage = [] }
 
+    /// うんちの生成 : Generate a poo
     let rec private createBrown n (conf:Config) =
         if 0 < n then
-            let head = conf.Snake |> List.rev |> List.head
+            let head = List.last conf.Snake
             { conf with Brown = conf.Brown@[head] }
             |> createBrown (n-1)
         else conf
 
+    /// 食事 : eat
     let rec private getFood l n =
         if 0 < n then
             let tick = stopwatch.ElapsedTicks
@@ -93,9 +95,9 @@ module SnakeGame =
             getFood (l@[x,y]) (n-1)
         else l
 
+    /// 成長
     let private grow (snake:(int * int) list) =
-        let last = snake.Length - 1
-        snake@[snake.[last]]
+        snake@[List.last snake]
         
     let private moveing (conf:Config) =
         let add t1 t2 =
@@ -142,7 +144,7 @@ module SnakeGame =
             if bf then
                 conf.Snake
                 |> Seq.unfold (fun snake -> Some (snake, grow snake))
-                |> Seq.nth SnakeConfig.StretchBody
+                |> Seq.item SnakeConfig.StretchBody
             else conf.Snake
         let score =
             if bf then SnakeConfig.EatPoint
@@ -184,9 +186,9 @@ module SnakeGame =
             seq {
                 // input behavior
                 let conf = getInput conf
-                // move every 250 msec.
+                // move every 300 msec.
                 let conf,moved =
-                    if stopwatch.ElapsedMilliseconds % 150L = 0L then
+                    if stopwatch.ElapsedMilliseconds % 300L = 0L then
                         moveing conf,true
                     else conf,false
                 if moved then yield conf
@@ -202,15 +204,16 @@ module SnakeGame =
                     if stopwatch.ElapsedMilliseconds % SnakeConfig.SpecialFoodTiming = 0L then
                         { conf with Special = getFood conf.Special 1 }
                     else conf
-                // grow every 2.5 seconds
+                // grow every 5 seconds
                 let conf =
-                    if stopwatch.ElapsedMilliseconds % 1000L = 0L then
+                    if stopwatch.ElapsedMilliseconds % 5000L = 0L then
                         { conf with
                             Score = conf.Score + SnakeConfig.PointsScored
                             Snake = grow conf.Snake }
                     else conf
                 // draw to 60 msec.
                 if stopwatch.ElapsedMilliseconds % 60L = 0L then yield conf
+                yield conf
                 // is not performed recursion collision
                 if conf.Input = SnakeInputType.Exit then
                     yield conf
